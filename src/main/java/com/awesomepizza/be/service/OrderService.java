@@ -80,22 +80,58 @@ public class OrderService {
     @Getter
     private static final PageRequest DEFAULT_PAGE_REQUEST = PageRequest.of(0, 10, DEFAULT_SORT);
 
+    protected Mono<OrderModel> valorizeOrder(OrderModel orderMono) {
+        return Mono.just(orderMono)
+                .flatMap(order -> orderAddressRepository.findById(order.getAddressId())
+                        .map(order::setAddress))
+                .flatMap(order -> Flux.fromArray(order.getProductIds()).flatMap(productRepository::findById)
+                        .collectList()
+                        .map(order::setProducts));
+    }
+
     public Flux<OrderResponseDto> getOrders(int page) {
         final PageRequest pageRequest = DEFAULT_PAGE_REQUEST.withPage(page);
         return orderRepository.findBy(pageRequest)
-                .flatMap(order -> orderAddressRepository.findById(order.getAddressId())
-                        .map(order::setAddress))
-                .flatMap(order -> Flux.fromArray(order.getProductIds()).flatMap(productRepository::findById).collectList()
-                        .map(order::setProducts))
+                .flatMap(this::valorizeOrder)
+                .map(OrderResponseDto::of);
+    }
+
+    public Flux<OrderResponseDto> getPendingOrders(int page) {
+        final PageRequest pageRequest = DEFAULT_PAGE_REQUEST.withPage(page);
+        return orderRepository.findAllByStatus(OrderStatusEnum.PENDING,  pageRequest)
+                .flatMap(this::valorizeOrder)
+                .map(OrderResponseDto::of);
+    }
+
+    public Flux<OrderResponseDto> getActiveOrders(int page) {
+        final PageRequest pageRequest = DEFAULT_PAGE_REQUEST.withPage(page);
+        final List<OrderStatusEnum> inactiveStatuses = List.of(OrderStatusEnum.CANCELLED, OrderStatusEnum.DELIVERED);
+        return orderRepository.findAllByStatusNotIn(inactiveStatuses,  pageRequest)
+                .flatMap(this::valorizeOrder)
                 .map(OrderResponseDto::of);
     }
 
     public Mono<OrderResponseDto> getOrder(Long orderNo) {
         return orderRepository.findById(orderNo)
-                .flatMap(order -> orderAddressRepository.findById(order.getAddressId())
-                        .map(order::setAddress))
-                .flatMap(order -> Flux.fromArray(order.getProductIds()).flatMap(productRepository::findById).collectList()
-                        .map(order::setProducts))
+                .flatMap(this::valorizeOrder)
+                .map(OrderResponseDto::of);
+    }
+
+    public Mono<OrderResponseDto> setOrderStatus(Long orderNo, OrderStatusEnum status) {
+        return orderRepository.findById(orderNo)
+                .flatMap(order -> {
+                    if (order.getStatus().getLevel() > status.getLevel()) {
+                        return Mono.error(new IllegalArgumentException("Cannot set status to a lower level"));
+                    }
+
+                    if (order.getStatus().getLevel() == OrderStatusEnum.BLOCK_ORDER_VALUE()) {
+                        return Mono.error(new IllegalArgumentException("Cannot set status of a blocked order"));
+                    }
+
+                    return Mono.just(order.setStatus(status));
+                })
+                .flatMap(orderRepository::save)
+                .flatMap(this::valorizeOrder)
                 .map(OrderResponseDto::of);
     }
 
@@ -109,7 +145,7 @@ public class OrderService {
     public Mono<Boolean> deleteOrderCustomer(Long orderNo) {
         return orderRepository.findById(orderNo)
                 .flatMap(order -> {
-                    if (order.getStatus() != OrderStatusEnum.PENDING && order.getStatus() != OrderStatusEnum.CANCELLED) {
+                    if (order.getStatus() != OrderStatusEnum.PENDING) {
                         return Mono.just(false);
                     }
 
@@ -118,9 +154,11 @@ public class OrderService {
                             .map(savedOrder -> savedOrder.getStatus() == OrderStatusEnum.CANCELLED);
                 });
     }
+
+    public Mono<Boolean> deleteOrderShop(Long orderNo) {
         return orderRepository.findById(orderNo)
                 .flatMap(order -> {
-                    if (order.getStatus() != OrderStatusEnum.PENDING) {
+                    if (order.getStatus().getLevel() != OrderStatusEnum.BLOCK_ORDER_VALUE()) {
                         return Mono.just(false);
                     }
 

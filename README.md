@@ -10,7 +10,7 @@ Implemented:
 |Customer|X|X|
 |Address|X|X|
 |Products|X|X|
-|Orders|X|X|
+|Orders|X|X|X|
 |Shop|X|X|X|
 
 ## OpenAPI
