@@ -1,0 +1,625 @@
+databaseChangeLog:
+  # - preConditions:
+  #     - runningAs:
+  #         username:  liquibase
+  - changeSet:
+      id: create-tables
+      author: antonio.spadaro
+      changes:
+        - createTable:
+            tableName: CUSTOMERS
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  defaultValueComputed: "unordered_unique_rowid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: CUSTOMERS
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: "Mario Rossi"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - createTable:
+            tableName: ADDRESSES
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  defaultValueComputed: "unordered_unique_rowid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: customer
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: street
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: street_no
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: zip_cap
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prov_st
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: state
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: varchar(30)
+              - column:
+                  name: version
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: ADDRESSES
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: customer
+                  valueNumeric: 1
+              - column:
+                  name: street
+                  value: "Viale Edoardo Jenner"
+              - column:
+                  name: street_no
+                  value: "51"
+              - column:
+                  name: city
+                  value: "MILANO"
+              - column:
+                  name: zip_cap
+                  value: "20159"
+              - column:
+                  name: prov_st
+                  value: "MI"
+              - column:
+                  name: state
+                  value: "Italy"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - createTable:
+            tableName: PRODUCTS
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  defaultValueComputed: "unordered_unique_rowid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: varchar(50)
+              - column:
+                  name: ingredients
+                  type: varchar(20) []
+              - column:
+                  name: price
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: visible
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: orderable
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: PRODUCTS
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: "Pizza Margherita"
+              - column:
+                  name: description
+                  value: "Classic Italian Pizza"
+              - column:
+                  name: ingredients
+                  value: '{"Tomato", "Mozzarella", "Basil"}'
+              - column:
+                  name: price
+                  valueNumeric: 5.0
+              - column:
+                  name: visible
+                  valueBoolean: true
+              - column:
+                  name: orderable
+                  valueBoolean: true
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - createTable:
+            tableName: ORDER_ADDRESSES
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  defaultValueComputed: "unordered_unique_rowid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: street
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: street_no
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: zip_cap
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prov_st
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: state
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: varchar(30)
+              - column:
+                  name: version
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: ORDERS
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  defaultValueComputed: "unordered_unique_rowid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: customer
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: products
+                  type: INT[]
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: varchar(50)
+              - column:
+                  name: status
+                  type: varchar(20)
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: confirmation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: delivery_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: SHOPS
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  defaultValueNumeric: 1
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: street
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: street_no
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: zip_cap
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prov_st
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: state
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: SHOPS
+            columns:
+              - column:
+                  name: name
+                  value: "Awesome Pizza"
+              - column:
+                  name: street
+                  value: "Viale Edoardo Jenner"
+              - column:
+                  name: street_no
+                  value: "51"
+              - column:
+                  name: city
+                  value: "MILANO"
+              - column:
+                  name: zip_cap
+                  value: "20159"
+              - column:
+                  name: prov_st
+                  value: "MI"
+              - column:
+                  name: state
+                  value: "Italy"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+
+        - createTable:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: opening_hours
+                  type: Integer[]
+              - column:
+                  name: version
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - insert:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  valueNumeric: 0
+              - column:
+                  name: opening_hours
+                  value: "{11, 23}"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - insert:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  valueNumeric: 2
+              - column:
+                  name: opening_hours
+                  value: "{11, 23}"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - insert:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  valueNumeric: 3
+              - column:
+                  name: opening_hours
+                  value: "{11, 23}"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - insert:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  valueNumeric: 4
+              - column:
+                  name: opening_hours
+                  value: "{11, 23}"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - insert:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  valueNumeric: 5
+              - column:
+                  name: opening_hours
+                  value: "{11, 23}"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - insert:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  valueNumeric: 6
+              - column:
+                  name: opening_hours
+                  value: "{11, 23}"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'
+        - insert:
+            tableName: SHOP_OPENING_HOURS
+            columns:
+              - column:
+                  name: day_of_the_week
+                  valueNumeric: 7
+              - column:
+                  name: opening_hours
+                  value: "{11, 23}"
+              - column:
+                  name: version
+                  valueNumeric: 0
+              - column:
+                  name: creation_date
+                  valueDate: '1970-01-01 00:00:00'
+              - column:
+                  name: last_modified_date
+                  valueDate: '1970-01-01 00:00:00'

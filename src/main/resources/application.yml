@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: awesomepizza-be
+  r2dbc:
+    url: r2dbc:postgresql://localhost:26257/awesomepizza
+    username: myuser
+    password: secret
+  liquibase:
+    url: jdbc:postgresql://localhost:26257/awesomepizza
+    user: myuser
+    password: secret
+springdoc:
+  swagger-ui:
+    path: /

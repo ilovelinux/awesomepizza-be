@@ -1,0 +1,63 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.adarshr.test-logger' version '4.0.0'
+    id 'jacoco'
+}
+
+group = 'com.awesomepizza'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.5'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0'
+	implementation 'org.liquibase:liquibase-core'
+	implementation 'org.springframework:spring-jdbc'
+	implementation 'org.yaml:snakeyaml'
+	implementation 'org.threeten:threeten-extra:1.8.0'
+	// implementation 'org.jacoco:jacoco-maven-plugin:0.8.12'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'org.postgresql:r2dbc-postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation "org.testcontainers:cockroachdb:1.20.3"
+	testImplementation 'org.testcontainers:r2dbc'
+	testImplementation 'net.javacrumbs.json-unit:json-unit:3.5.0'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
