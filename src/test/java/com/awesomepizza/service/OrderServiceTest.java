@@ -103,7 +103,7 @@ public class OrderServiceTest {
         newOrder.setNotes(null);
 
         order = new OrderModel();
-        order.setProducts(List.of(product));
+        order.setProductIds(new Long[] {product.getId()});
         order.setAddressId(orderAddress.getId());
         order.setNotes(null);
         order.setStatus(OrderStatusEnum.ACCEPTED);
@@ -171,6 +171,7 @@ public class OrderServiceTest {
 
         when(this.orderRepository.findBy(any(Pageable.class))).thenReturn(Flux.fromStream(orders));
         when(orderAddressRepository.findById(1L)).thenReturn(Mono.just(orderAddress));
+        when(productRepository.findById(1L)).thenReturn(Mono.just(product));
 
         final Flux<OrderResponseDto> serviceResponse = service.getOrders(0);
 
@@ -180,6 +181,7 @@ public class OrderServiceTest {
 
         verify(orderRepository).findBy(any(Pageable.class));
         verify(orderAddressRepository, times(10)).findById(1L);
+        verify(productRepository, times(10)).findById(1L);
     }
 
     @Test
@@ -199,6 +201,7 @@ public class OrderServiceTest {
     void getOrder() {
         when(this.orderRepository.findById(1L)).thenReturn(Mono.just(order));
         when(orderAddressRepository.findById(1L)).thenReturn(Mono.just(orderAddress));
+        when(productRepository.findById(1L)).thenReturn(Mono.just(product));
 
         final Mono<OrderResponseDto> serviceResponse = service.getOrder(1L);
 
@@ -208,6 +211,7 @@ public class OrderServiceTest {
 
         verify(orderRepository).findById(1L);
         verify(orderAddressRepository).findById(1L);
+        verify(productRepository).findById(1L);
     }
 
     @Test

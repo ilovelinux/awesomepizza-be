@@ -57,7 +57,8 @@ public class OrderService {
 
         final Mono<List<ProductModel>> products = Flux.fromIterable(newOrder.getProducts())
                 .flatMap(productRepository::findById)
-                .collectList();
+                .collectList()
+                .cache();
 
         final Mono<OrderModel> order = Mono.zip(customer, orderAddress, products).map(tuple -> {
             final CustomerModel customerModel = tuple.getT1();
@@ -66,11 +67,12 @@ public class OrderService {
             return OrderModel.of(newOrder, customerModel, orderAddressModel, productModels);
         }).flatMap(orderRepository::save);
 
-        return Mono.zip(order, orderAddress)
+        return Mono.zip(order, orderAddress, products)
                 .map(tuple -> {
                     final OrderModel orderModel = tuple.getT1();
                     final OrderAddressModel orderAddressModel = tuple.getT2();
-                    return orderModel.setAddress(orderAddressModel);
+                    final List<ProductModel> productModels = tuple.getT3();
+                    return orderModel.setAddress(orderAddressModel).setProducts(productModels);
                 })
                 .map(OrderResponseDto::of);
     }
