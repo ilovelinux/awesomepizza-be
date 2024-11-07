@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(path = "/customer/orders", produces = MediaType.APPLICATION_JSON_VALUE)
-public class OrderController {
+public class OrderCustomerController {
     @Autowired
     OrderService orderService;
 

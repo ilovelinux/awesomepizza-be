@@ -24,8 +24,8 @@ import com.awesomepizza.be.service.AddressService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@WebFluxTest(AddressController.class)
-public class AddressControllerTest {
+@WebFluxTest(AddressCustomerController.class)
+public class AddressCustomerControllerTest {
     @Autowired
     private WebTestClient webClient;
 

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping(path = "/customer/address", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AddressController {
+public class AddressCustomerController {
     @Autowired
     AddressService addressService;
 

@@ -20,8 +20,8 @@ import com.awesomepizza.be.service.OrderService;
 
 import reactor.core.publisher.Mono;
 
-@WebFluxTest(OrderController.class)
-public class OrderControllerTest {
+@WebFluxTest(OrderCustomerController.class)
+public class OrderCustomerControllerTest {
     @Autowired
     private WebTestClient webClient;
 

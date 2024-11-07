@@ -21,8 +21,8 @@ import com.awesomepizza.be.service.ShopService;
 
 import reactor.core.publisher.Mono;
 
-@WebFluxTest(ShopController.class)
-public class ShopControllerTest {
+@WebFluxTest(ShopCustomerController.class)
+public class ShopCustomerControllerTest {
     @Autowired
     private WebTestClient webClient;
 

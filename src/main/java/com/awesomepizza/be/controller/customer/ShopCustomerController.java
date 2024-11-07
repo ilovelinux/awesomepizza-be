@@ -1,7 +1,6 @@
 package com.awesomepizza.be.controller.customer;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.awesomepizza.be.dto.response.ShopInfoResponseDto;
@@ -15,12 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping(path="/customer/shop", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ShopController {
+public class ShopCustomerController {
     @Autowired
     ShopService shopService;
 
     @GetMapping("/info")
-    @ResponseBody
     public Mono<ShopInfoResponseDto> getInfo() {
         return shopService.getInfo();
     }
