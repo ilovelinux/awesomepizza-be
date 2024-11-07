@@ -48,7 +48,7 @@ public class OrderController {
 
     @DeleteMapping("/{orderNo}")
     public Mono<ResponseEntity<Object>> deleteOrder(@PathVariable Long orderNo) {
-        return orderService.deleteOrder(orderNo)
+        return orderService.deleteOrderCustomer(orderNo)
                 .map(deleted -> {
                     if (!deleted)
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

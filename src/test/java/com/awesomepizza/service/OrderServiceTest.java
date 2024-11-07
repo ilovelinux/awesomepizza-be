@@ -228,7 +228,7 @@ public class OrderServiceTest {
         when(this.orderRepository.findById(1L)).thenReturn(Mono.just(order.setStatus(OrderStatusEnum.PENDING)));
         when(this.orderRepository.save(any(OrderModel.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        final Mono<Boolean> serviceResponse = service.deleteOrder(1L);
+        final Mono<Boolean> serviceResponse = service.deleteOrderCustomer(1L);
 
         StepVerifier.create(serviceResponse)
                 .expectNext(true)
@@ -242,7 +242,7 @@ public class OrderServiceTest {
     void deleteOrderAlreadyAccepted() {
         when(this.orderRepository.findById(1L)).thenReturn(Mono.just(order));
 
-        final Mono<Boolean> serviceResponse = service.deleteOrder(1L);
+        final Mono<Boolean> serviceResponse = service.deleteOrderCustomer(1L);
 
         StepVerifier.create(serviceResponse)
                 .expectNext(false)
@@ -256,7 +256,7 @@ public class OrderServiceTest {
     void deleteOrderNotFound() {
         when(this.orderRepository.findById(1L)).thenReturn(Mono.empty());
 
-        final Mono<Boolean> serviceResponse = service.deleteOrder(1L);
+        final Mono<Boolean> serviceResponse = service.deleteOrderCustomer(1L);
 
         StepVerifier.create(serviceResponse)
                 .expectNextCount(0)

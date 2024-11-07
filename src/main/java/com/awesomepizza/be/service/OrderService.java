@@ -102,7 +102,18 @@ public class OrderService {
      * @param orderNo
      * @return true if the order can be cancelled, false otherwise
      */
-    public Mono<Boolean> deleteOrder(Long orderNo) {
+    public Mono<Boolean> deleteOrderCustomer(Long orderNo) {
+        return orderRepository.findById(orderNo)
+                .flatMap(order -> {
+                    if (order.getStatus() != OrderStatusEnum.PENDING && order.getStatus() != OrderStatusEnum.CANCELLED) {
+                        return Mono.just(false);
+                    }
+
+                    return orderRepository
+                            .save(order.setStatus(OrderStatusEnum.CANCELLED))
+                            .map(savedOrder -> savedOrder.getStatus() == OrderStatusEnum.CANCELLED);
+                });
+    }
         return orderRepository.findById(orderNo)
                 .flatMap(order -> {
                     if (order.getStatus() != OrderStatusEnum.PENDING) {

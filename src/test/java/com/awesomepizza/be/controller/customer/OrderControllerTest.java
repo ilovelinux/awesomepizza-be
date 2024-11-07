@@ -76,37 +76,37 @@ public class OrderControllerTest {
 
     @Test
     void deleteOrder() {
-        when(orderService.deleteOrder(1L)).thenReturn(Mono.just(true));
+        when(orderService.deleteOrderCustomer(1L)).thenReturn(Mono.just(true));
 
         webClient.delete().uri("/customer/orders/1")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().isEmpty();
 
-        verify(orderService).deleteOrder(1L);
+        verify(orderService).deleteOrderCustomer(1L);
     }
 
     @Test
     void deleteOrderAlreadyAccepted() {
-        when(orderService.deleteOrder(1L)).thenReturn(Mono.just(false));
+        when(orderService.deleteOrderCustomer(1L)).thenReturn(Mono.just(false));
 
         webClient.delete().uri("/customer/orders/1")
                 .exchange()
                 .expectStatus().isForbidden()
                 .expectBody().isEmpty();
 
-        verify(orderService).deleteOrder(1L);
+        verify(orderService).deleteOrderCustomer(1L);
     }
 
     @Test
     void deleteOrderNotFound() {
-        when(orderService.deleteOrder(1L)).thenReturn(Mono.empty());
+        when(orderService.deleteOrderCustomer(1L)).thenReturn(Mono.empty());
 
         webClient.delete().uri("/customer/orders/1")
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody().isEmpty();
 
-        verify(orderService).deleteOrder(1L);
+        verify(orderService).deleteOrderCustomer(1L);
     }
 }
