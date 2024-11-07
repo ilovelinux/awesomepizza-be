@@ -85,6 +85,8 @@ public class OrderService {
         return orderRepository.findBy(pageRequest)
                 .flatMap(order -> orderAddressRepository.findById(order.getAddressId())
                         .map(order::setAddress))
+                .flatMap(order -> Flux.fromArray(order.getProductIds()).flatMap(productRepository::findById).collectList()
+                        .map(order::setProducts))
                 .map(OrderResponseDto::of);
     }
 
@@ -92,6 +94,8 @@ public class OrderService {
         return orderRepository.findById(orderNo)
                 .flatMap(order -> orderAddressRepository.findById(order.getAddressId())
                         .map(order::setAddress))
+                .flatMap(order -> Flux.fromArray(order.getProductIds()).flatMap(productRepository::findById).collectList()
+                        .map(order::setProducts))
                 .map(OrderResponseDto::of);
     }
 
